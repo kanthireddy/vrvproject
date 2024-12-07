@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>CareMind</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="dash.css">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<!-- Dropdown and Search Styling -->
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+        width: 90%;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #333;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        margin-top: 10px;
+    }
+    .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        font-size: 14px;
+    }
+    .dropdown-content a:hover {
+        background-color: #575757;
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+    .dropbtn {
+        background-color: #333;
+        color: white;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        text-align: left;
+        width: 100%;
+        cursor: pointer;
+    }
+    #sidebarSearch {
+        background-color: #333;
+        color: white;
+        border-radius: 5px;
+        border: none;
+        font-size: 14px;
+    }
+      /* Professional Toggle Switch Styling */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 26px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        border-radius: 50%;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+    }
+
+    input:checked + .slider {
+        background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(24px);
+    }
+
+    .status-toggle {
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+<body>
+    <div class="container123">
+        <!-- Sidebar -->
+<div class="sidebar">
+    <a href="index.html">
+        <h2 style="text-align: center; color: white;font-size: 35px;">VRV  <span style="color: #f34e17;">Care</span></h2>
+    </a>
+    
+    <!-- Search Functionality -->
+    <input type="text" id="sidebarSearch" placeholder="Search..." style="width: 90%; margin: 10px auto; padding: 8px; border-radius: 5px; border: none;">
+    
+   <!-- Active/Inactive Status Toggle -->
+   <div class="status-toggle" style="margin-top: 15px; margin-left: 20px; font-size: 20px; display: flex; align-items: center; justify-content: space-between;">
+    
+    <span style="color: white;"> Active </span>
+    <label class="switch" style="margin-left: 10px;">
+        <input type="checkbox" id="statusToggle">
+        <span class="slider round"></span>
+    </label>
+    <span id="statusText" style="color: white; margin-left: 10px; font-size: 20px;" >Inactive</span>
+</div>
+
+    <a href="#profileManagement" class="nav-item">
+        <i class="fas fa-user-cog"></i> Profile
+    </a>
+    <a href="#appointmentHistory" class="nav-item">
+        <i class="fas fa-calendar-check"></i> Appointments
+    </a>
+    <a href="#sessionNotes" class="nav-item">
+        <i class="fas fa-file-alt"></i> Session Notes
+    </a>
+    <a href="#notifications" class="nav-item">
+        <i class="fas fa-bell"></i> Notifications
+    </a>
+    <a href="index.html" class="nav-item">
+        <i class="fas fa-home"></i> Back to Home
+    </a>
+</div>
+
+
+<!-- JavaScript for Role and Status Change -->
+<script>
+    // Change Role functionality (stub for now)
+    document.getElementById("changeRole").addEventListener("click", function() {
+        alert("Change Role functionality triggered!");
+        // Implement role-changing logic here
+    });
+
+    // Toggle Active/Inactive status functionality
+    document.getElementById("statusToggle").addEventListener("change", function() {
+        const statusText = document.getElementById("statusText");
+        if (this.checked) {
+            statusText.textContent = "Active";
+        } else {
+            statusText.textContent = "Inactive";
+        }
+    });
+</script>
+<script>
+    // Search Functionality (for demo purposes, you can modify as needed)
+    document.getElementById("sidebarSearch").addEventListener("input", function() {
+        let query = this.value.toLowerCase();
+        let items = document.querySelectorAll(".nav-item");
+        
+        items.forEach(function(item) {
+            if (item.textContent.toLowerCase().includes(query)) {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    });
+</script>
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1 style="color: rgb(6, 6, 6);">Welcome to VRV Care</h1>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="stats">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Total Mental Health Checkup's </h3>
+                    <p id="totalUsers">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>Active Patient Consultations</h3>
+                    <p id="activeSessions">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-server"></i>
+                    <h3>Clinic Operational Hours</h3>
+                    <p id="serverUptime">0 hrs</p>
+                </div>
+            </div>
+
+            <!-- Graphs Section -->
+            <div class="graphs">
+                <div class="graph-container">
+                    <canvas id="lineChart"></canvas>
+                </div>
+                <div class="graph-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Profile Management Section -->
+            <div id="profileManagement" class="section">
+                <h2>Profile Management</h2>
+
+                <!-- Profile Edit Form (Initially Hidden) -->
+                <div id="profileEditForm" class="profile-edit-form" style="display: none;">
+                    <label for="editName">Name:</label>
+                    <input type="text" id="editName" value="John Doe" />
+
+                    <label for="editEmail">Email:</label>
+                    <input type="email" id="editEmail" value="johndoe@example.com" />
+
+                    <label for="editPhone">Phone:</label>
+                    <input type="text" id="editPhone" value="123-456-7890" />
+
+                    <label for="editAddress">Address:</label>
+                    <input type="text" id="editAddress" value="123 Main St, Anytown, USA" />
+
+                    <button id="saveProfileBtn" class="btn">Update Profile</button>
+                    <button id="cancelEditBtn" class="btn">Cancel</button>
+                </div>
+
+                <!-- Profile Form -->
+                <form id="profile-form" onsubmit="return updateProfile(event)">
+                    <label for="username">First Name:</label>
+                    <input type="text" id="username" placeholder="Update first name"
+                        oninput="restrictInput(event, 'name'); validateForm()">
+                    <span id="username-error" class="error-message"></span> <!-- Error message here -->
+
+                    <label for="last-name">Last Name:</label>
+                    <input type="text" id="last-name" placeholder="Update last name"
+                        oninput="restrictInput(event, 'name'); validateForm()">
+                    <span id="lastname-error" class="error-message"></span> <!-- Error message here -->
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="Update email" oninput="validateForm()">
+                    <span id="email-error" class="error-message"></span> <!-- Error message here -->
+
+                    <label for="phone">Phone Number:</label>
+                    <input type="text" id="phone" maxlength="10" placeholder="Enter 10-digit phone number"
+                        oninput="restrictInput(event, 'phone'); validateForm()">
+                    <span id="phone-error" class="error-message"></span> <!-- Error message here -->
+
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" placeholder="Update address" oninput="validateForm()">
+                    <span id="address-error" class="error-message"></span> <!-- Error message here -->
+
+                    <label for="preferences">Preferences:</label>
+                    <textarea id="preferences" placeholder="Update your preferences (max 200 characters)"
+                        oninput="validateForm()"></textarea>
+                    <span id="preferences-error" class="error-message"></span> <!-- Error message here -->
+
+                    <button type="submit" id="update-btn" style="background-color: #06A3DA;color: black;"
+                        disabled>Update Profile</button>
+                </form>
+
+                <!-- Success message and updated profile info -->
+                <div id="profile-info" class="profile-info" style="display: none;"></div>
+
+
+            </div>
+
+            <!-- Section: Appointment History -->
+            <div id="appointmentHistory" class="section">
+                <h2>Mental Health Checkup Appointment History</h2>
+                <p>Details of your previous mental health checkups, along with upcoming wellness sessions to support
+                    your mental well-being.</p>
+
+                <!-- Combined Section: Appointment History and Mental Health Wellness Sessions -->
+                <div class="appointment-history-training">
+
+                    <!-- Previous Appointments -->
+                    <div class="appointment-details">
+                        <h3>Your Past Appointments</h3>
+                        <ul>
+                            <li>Initial Consultation with Psychologist - Date: 2023-10-15</li>
+                            <li>Cognitive Behavioral Therapy Session - Date: 2023-11-02</li>
+                            <li>Stress Management Workshop - Date: 2023-11-10</li>
+                            <li>Follow-up on Therapy Progress - Date: 2023-11-18</li>
+                        </ul>
+                        <p>If you need further assistance or want to schedule a new checkup, contact us at the mental
+                            health clinic.</p>
+                    </div>
+
+
+
+                    <!-- Facial Surgery Training Sessions -->
+                    <div id="training" class="training-section">
+                        <form id="training-form">
+                            <div class="training-grid">
+                                <!-- Left Side Sessions -->
+                                <div class="left-column">
+                                    <div class="training-card">
+                                        <h4>Session 1: Introduction to Mental Health Awareness</h4>
+                                        <p>Learn the basics of mental health, common challenges, and how to identify
+                                            early warning signs.</p>
+                                        <label>
+                                            <input type="checkbox" name="session1" value="Mental Health Awareness">
+                                            Register for Session 1
+                                        </label>
+                                    </div>
+                                    <div class="training-card">
+                                        <h4>Session 2: Stress and Anxiety Management</h4>
+                                        <p>Understand techniques to manage stress and cope with anxiety effectively.</p>
+                                        <label>
+                                            <input type="checkbox" name="session2"
+                                                value="Stress and Anxiety Management"> Register for Session 2
+                                        </label>
+                                    </div>
+                                    <div class="training-card">
+                                        <h4>Session 3: Cognitive Behavioral Therapy Basics</h4>
+                                        <p>Get an overview of CBT principles and how they help in reshaping thought
+                                            patterns.</p>
+                                        <label>
+                                            <input type="checkbox" name="session3"
+                                                value="Cognitive Behavioral Therapy Basics"> Register for Session 3
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Right Side Sessions -->
+                                <div class="right-column">
+                                    <div class="training-card">
+                                        <h4>Session 4: Mindfulness and Relaxation Techniques</h4>
+                                        <p>Discover how mindfulness practices and relaxation methods can improve mental
+                                            well-being.</p>
+                                        <label>
+                                            <input type="checkbox" name="session4"
+                                                value="Mindfulness and Relaxation Techniques"> Register for Session 4
+                                        </label>
+                                    </div>
+                                    <div class="training-card">
+                                        <h4>Session 5: Managing Depression and Mood Disorders</h4>
+                                        <p>Explore strategies to recognize and manage symptoms of depression and mood.
+                                        </p>
+                                        <label>
+                                            <input type="checkbox" name="session5"
+                                                value="Managing Depression and Mood Disorders"> Register for Session 5
+                                        </label>
+                                    </div>
+                                    <div class="training-card">
+                                        <h4>Session 6: Building Resilience and Emotional Strength</h4>
+                                        <p>Learn to develop resilience and improve emotional regulation to face life
+                                            challenges.</p>
+                                        <label>
+                                            <input type="checkbox" name="session6"
+                                                value="Building Resilience and Emotional Strength"> Register for Session
+                                            6
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="submit-button">Register for Sessions</button>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <!-- Session Notes Section -->
+            <div id="sessionNotes" class="section">
+                <h2>Session Notes</h2>
+                <p>Details of Session Notes will be added here as you input treatment plans.</p>
+            </div>
+
+            <!-- Existing Session List -->
+            <div id="session-list">
+                <div class="session-card" data-id="1">
+                    <h4>Psychological evaluation</h4>
+                    <p>
+                        A psychological evaluation is a assessment process used to measure an individual's
+                        mental health, emotional state, and behavior through tests, interviews, and
+                        observations. </p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(1)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(1)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="session-card" data-id="2">
+                    <h4>Mental health screening</h4>
+                    <p>
+                        Mental health screening is a brief assessment process designed to identify signs of mental
+                        health issues, such as anxiety, depression, or stress, often using questionnaires.
+                    </p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(2)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(2)">Delete</button>
+                    </div>
+                </div>
+
+
+                <div class="session-card" data-id="3">
+                    <h4>Depression screening</h4>
+                    <p>Depression screening is a brief evaluation tool used to identify signs of depression, such as
+                        persistent sadness, loss of interest, or fatigue, through questionnaires or interviews.</p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(3)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(3)">Delete</button>
+                    </div>
+                </div>
+
+
+                <div class="session-card" data-id="4">
+                    <h4>Trauma assessment</h4>
+                    <p>Trauma assessment is a structured process to an individual's psychological and emotional
+                        response to a traumatic event. It identifies the impact on mental health, coping mechanisms.</p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(4)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(4)">Delete</button>
+                    </div>
+                </div>
+
+
+                <div class="session-card" data-id="5">
+                    <h4>Bipolar disorder evaluation</h4>
+                    <p>
+                        A bipolar disorder evaluation is a comprehensive assessment to diagnose and understand bipolar
+                        disorder by behavior, and family history through interviews.</p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(5)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(5)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="session-card" data-id="6">
+                    <h4>PTSD assessment</h4>
+                    <p>A PTSD assessment is a systematic evaluation to identify symptoms of post-traumatic stress
+                        disorder, such as intrusive thoughts, avoidance, hyperarousal.</p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(6)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(6)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="session-card" data-id="7">
+                    <h4>Suicide risk assessment</h4>
+                    <p>A suicide risk assessment is a critical evaluation to determine an individual's of
+                        self-harm or suicide. It involves exploring thoughts, plans, behaviors, mental health history.
+                    </p>
+
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(7)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(7)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="session-card" data-id="8">
+                    <h4>Psychodynamic therapy</h4>
+                    <p>Psychodynamic therapy is a form of talk therapy that focuses on  unconscious thoughts,
+                        feelings, and past experiences to understand current behaviors and emotional challenges.</p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(8)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(8)">Delete</button>
+                    </div>
+                </div>
+
+
+                <div class="session-card" data-id="9">
+                    <h4>Exposure therapy</h4>
+                    <p>Exposure therapy is a psychological treatment that helps individuals confront and reduce anxiety
+                        or fear related to specific situations, objects, or thoughts.</p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(9)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(9)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="session-card" data-id="10">
+                    <h4>Family therapy</h4>
+                    <p>Family therapy is a form of counseling that involves treating family members collectively to
+                        improve communication, resolve conflicts, and address issues.
+                    </p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(10)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(10)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="session-card" data-id="11">
+                    <h4>Individual psychotherapy</h4>
+                    <p>Individual psychotherapy is a therapeutic approach where a person works one-on-one with a mental
+                        health professional to address emotional, psychological.</p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(11)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(11)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="session-card" data-id="12">
+                    <h4>Interpersonal therapy (IPT)</h4>
+                    <p>Interpersonal Therapy (IPT) is a structured, time-limited treatment that focuses on improving
+                        interpersonal relationships and communication patterns.
+                    </p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(12)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(12)">Delete</button>
+                    </div>
+                </div>
+
+                <!-- New Facial Surgery Session Card -->
+                <div class="session-card" data-id="13">
+                    <h4>Motivational Interviewing</h4>
+                    <p>Motivational Interviewing (MI) is a client-centered counseling approach that aims to enhance an
+                        individual's motivation to change by exploring. </p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(13)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(13)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="session-card" data-id="14">
+                    <h4>Gestalt therapy </h4>
+                    <p>Gestalt therapy is an experiential form of psychotherapy that focuses on the present moment,
+                        personal awareness, and self-acceptance. </p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(14)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(14)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="session-card" data-id="15">
+                    <h4>Trauma-focused therapy</h4>
+                    <p>Trauma-focused therapy is a therapeutic approach designed to help individuals process and heal
+                        from the effects of traumatic experiences.
+                    </p>
+                    <div class="session-actions">
+                        <button class="update-btn" onclick="editSession(15)">Update</button>
+                        <button class="delete-btn" onclick="deleteSession(15)">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <!-- Add New Treatment Plan Popup -->
+            <div id="add-plan-popup" class="popup">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closeAddPlanPopup()">&times;</span>
+                    <h3>Add New Treatment Plan</h3>
+                    <input type="text" id="new-category" placeholder="Category (e.g., Cranial Surgery)" />
+                    <textarea id="new-notes" placeholder="Enter treatment plan details"></textarea>
+                    <button onclick="addSession()">Add Treatment Plan</button>
+                </div>
+            </div>
+
+            <!-- Popup for Success/Info Messages -->
+            <div id="popup" class="popup">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closePopup()">&times;</span>
+                    <p id="popup-message">Session Added Successfully!</p>
+                    <button style="background-color: #13C5DD; color: black;" id="popup-action"
+                        onclick="popupAction()">OK</button>
+                </div>
+            </div>
+
+            <!-- Section: Notifications -->
+            <div id="notifications" class="section11">
+                <center>
+                    <h2>Notifications</h2>
+                </center>
+                <center>
+                    <p>Details of Notifications related to Health Checkup's.</p>
+                </center>
+            </div>
+
+            <div id="notification-list">
+                <!-- Notification 1 -->
+                <div class="notification" data-id="1">
+                    <p><strong>Upcoming Appointment:</strong> You have a scheduled mental health checkup on
+                        <strong>2024-12-10</strong>.
+                    </p>
+                    <button class="delete-btn" onclick="removeNotification(1)">Dismiss</button>
+                </div>
+
+                <!-- Notification 2 -->
+                <div class="notification" data-id="2">
+                    <p><strong>New Article:</strong> "Understanding the Signs of Anxiety and Depression" has been added
+                        to our resources.</p>
+                    <button class="delete-btn" onclick="removeNotification(2)">Dismiss</button>
+                </div>
+
+                <!-- Notification 3 -->
+                <div class="notification" data-id="3">
+                    <p><strong>Clinic Update:</strong> The mental health clinic will be closed from
+                        <strong>2024-12-20</strong> to <strong>2024-12-25</strong>. Please reschedule if needed.
+                    </p>
+                    <button class="delete-btn" onclick="removeNotification(3)">Dismiss</button>
+                </div>
+
+                <!-- Notification 4 -->
+                <div class="notification" data-id="4">
+                    <p><strong>New Therapy Session:</strong> "Mindfulness for Stress Management" is now open for
+                        registration.</p>
+                    <button class="delete-btn" onclick="removeNotification(4)">Dismiss</button>
+                </div>
+
+                <!-- Notification 5 -->
+                <div class="notification" data-id="5">
+                    <p><strong>Self-Care Tips:</strong> Check out our guide on improving sleep quality to boost mental
+                        health.</p>
+                    <button class="delete-btn" onclick="removeNotification(5)">Dismiss</button>
+                </div>
+
+                <!-- Notification 6 -->
+                <div class="notification" data-id="6">
+                    <p><strong>Stress Relief Workshop:</strong> Join our upcoming workshop on effective stress
+                        management strategies.</p>
+                    <button class="delete-btn" onclick="removeNotification(6)">Dismiss</button>
+                </div>
+
+                <!-- Notification 7 -->
+                <div class="notification" data-id="7">
+                    <p><strong>Mental Health Trends:</strong> Explore the latest research on managing workplace stress.
+                    </p>
+                    <button class="delete-btn" onclick="removeNotification(7)">Dismiss</button>
+                </div>
+
+                <!-- Notification 8 -->
+                <div class="notification" data-id="8">
+                    <p><strong>Relaxation Techniques:</strong> Learn quick exercises to manage anxiety and improve
+                        focus.</p>
+                    <button class="delete-btn" onclick="removeNotification(8)">Dismiss</button>
+                </div>
+
+                <!-- Notification 9 -->
+                <div class="notification" data-id="9">
+                    <p><strong>Telehealth Services:</strong> New virtual counseling sessions are now available.</p>
+                    <button class="delete-btn" onclick="removeNotification(9)">Dismiss</button>
+                </div>
+
+                <!-- Notification 10 -->
+                <div class="notification" data-id="10">
+                    <p><strong>Mood Tracker:</strong> Use our new digital tool to monitor your mood and emotional
+                        patterns.</p>
+                    <button class="delete-btn" onclick="removeNotification(10)">Dismiss</button>
+                </div>
+
+                <!-- Notification 11 -->
+                <div class="notification" data-id="11">
+                    <p><strong>Community Support:</strong> Join our online mental health support group for shared
+                        experiences.</p>
+                    <button class="delete-btn" onclick="removeNotification(11)">Dismiss</button>
+                </div>
+
+                <!-- Notification 12 -->
+                <div class="notification" data-id="12">
+                    <p><strong>Exercise and Mental Health:</strong> Learn how regular exercise can improve emotional
+                        well-being.</p>
+                    <button class="delete-btn" onclick="removeNotification(12)">Dismiss</button>
+                </div>
+
+                <!-- Notification 13 -->
+                <div class="notification" data-id="13">
+                    <p><strong>New Research:</strong> A study on the effects of mindfulness on anxiety has been
+                        published.</p>
+                    <button class="delete-btn" onclick="removeNotification(13)">Dismiss</button>
+                </div>
+
+                <!-- Notification 14 -->
+                <div class="notification" data-id="14">
+                    <p><strong>Free Screening:</strong> Sign up for a free mental health screening this week.</p>
+                    <button class="delete-btn" onclick="removeNotification(14)">Dismiss</button>
+                </div>
+
+                <!-- Notification 15 -->
+                <div class="notification" data-id="15">
+                    <p><strong>Upcoming Seminar:</strong> Join the "Understanding Mental Health in Adolescents" seminar
+                        on <strong>2024-12-15</strong>.</p>
+                    <button class="delete-btn" onclick="removeNotification(15)">Dismiss</button>
+                </div>
+
+                <!-- Notification 16 -->
+                <div class="notification" data-id="16">
+                    <p><strong>Helpline Update:</strong> Our 24/7 mental health helpline is now live for all patients.
+                    </p>
+                    <button class="delete-btn" onclick="removeNotification(16)">Dismiss</button>
+                </div>
+
+                <!-- Notification 17 -->
+                <div class="notification" data-id="17">
+                    <p><strong>Grief Counseling:</strong> New sessions on coping with loss and building resilience are
+                        now open.</p>
+                    <button class="delete-btn" onclick="removeNotification(17)">Dismiss</button>
+                </div>
+
+                <!-- Notification 18 -->
+                <div class="notification" data-id="18">
+                    <p><strong>Team Update:</strong> Dr. Alex Green has joined our mental health team as a senior
+                        therapist.</p>
+                    <button class="delete-btn" onclick="removeNotification(18)">Dismiss</button>
+                </div>
+
+                <!-- Notification 19 -->
+                <div class="notification" data-id="19">
+                    <p><strong>Emergency Resources:</strong> View our updated list of emergency contacts and mental
+                        health resources.</p>
+                    <button class="delete-btn" onclick="removeNotification(19)">Dismiss</button>
+                </div>
+
+                <!-- Notification 20 -->
+                <div class="notification" data-id="20">
+                    <p><strong>Online Course:</strong> Enroll in our new course, "Building Emotional Resilience,"
+                        starting <strong>2024-12-20</strong>.</p>
+                    <button class="delete-btn" onclick="removeNotification(20)">Dismiss</button>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <script>
+        // Line Chart
+        const lineCtx = document.getElementById("lineChart").getContext("2d");
+        const lineChart = new Chart(lineCtx, {
+            type: "line",
+            data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+                datasets: [
+                    {
+                        label: "User Growth",
+                        data: [10, 20, 15, 25, 30, 40],
+                        borderColor: "#0073e6",
+                        backgroundColor: "rgba(0, 115, 230, 0.1)",
+                        fill: true,
+                        tension: 0.3,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                    },
+                },
+            },
+        });
+
+        // Bar Chart
+        const barCtx = document.getElementById("barChart").getContext("2d");
+        const barChart = new Chart(barCtx, {
+            type: "bar",
+            data: {
+                labels: ["Service A", "Service B", "Service C"],
+                datasets: [
+                    {
+                        label: "Surgeries",
+                        data: [30, 20, 50],
+                        backgroundColor: ["#0073e6", "#00c6ff", "#005bb5"],
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                    },
+                },
+            },
+        });
+
+        // Simulate Real-Time Updates
+        function updateDashboard() {
+            // Update stats
+            const totalUsers = Math.floor(Math.random() * 1000);
+            const activeSessions = Math.floor(Math.random() * 500);
+            const serverUptime = Math.floor(Math.random() * 100);
+
+            document.getElementById("totalUsers").textContent = totalUsers;
+            document.getElementById("activeSessions").textContent = activeSessions;
+            document.getElementById("serverUptime").textContent = `${serverUptime} hrs`;
+
+            // Update line chart
+            lineChart.data.datasets[0].data.push(Math.floor(Math.random() * 50));
+            lineChart.data.labels.push(`New ${Math.random() * 10}`);
+            if (lineChart.data.datasets[0].data.length > 10) {
+                lineChart.data.datasets[0].data.shift();
+                lineChart.data.labels.shift();
+            }
+            lineChart.update();
+
+            // Update bar chart
+            barChart.data.datasets[0].data = [
+                Math.floor(Math.random() * 50),
+                Math.floor(Math.random() * 50),
+                Math.floor(Math.random() * 50),
+            ];
+            barChart.update();
+        }
+
+        // Update every 2 seconds
+        setInterval(updateDashboard, 2000);
+    </script>
+
+    <!-- Validation for profile js  -->
+
+    <script>
+        // Restrict input to alphabets for names and digits for phone numbers
+        function restrictInput(event, type) {
+            const input = event.target;
+            const value = input.value;
+
+            if (type === "name" && /[^A-Za-z\s]/.test(value)) {
+                input.value = value.replace(/[^A-Za-z\s]/g, ""); // Remove non-alphabetic characters
+            } else if (type === "phone" && /[^0-9]/.test(value)) {
+                input.value = value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+            }
+        }
+
+        // Validate the form fields
+        function validateForm() {
+            let isValid = true;
+
+            // Validate first name
+            const username = document.getElementById('username').value;
+            const usernameError = document.getElementById('username-error');
+            if (username.trim() === "") {
+                usernameError.textContent = "First name is required.";
+                isValid = false;
+            } else {
+                usernameError.textContent = "";
+            }
+
+            // Validate last name
+            const lastName = document.getElementById('last-name').value;
+            const lastNameError = document.getElementById('lastname-error');
+            if (lastName.trim() === "") {
+                lastNameError.textContent = "Last name is required.";
+                isValid = false;
+            } else {
+                lastNameError.textContent = "";
+            }
+
+            // Validate email
+            const email = document.getElementById('email').value;
+            const emailError = document.getElementById('email-error');
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (email.trim() === "") {
+                emailError.textContent = "Email is required.";
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                emailError.textContent = "Please enter a valid email address.";
+                isValid = false;
+            } else {
+                emailError.textContent = "";
+            }
+
+            // Validate phone number
+            const phone = document.getElementById('phone').value;
+            const phoneError = document.getElementById('phone-error');
+            if (phone.trim() === "") {
+                phoneError.textContent = "Phone number is required.";
+                isValid = false;
+            } else if (phone.length !== 10) {
+                phoneError.textContent = "Phone number must be exactly 10 digits.";
+                isValid = false;
+            } else {
+                phoneError.textContent = "";
+            }
+
+            // Validate address
+            const address = document.getElementById('address').value;
+            const addressError = document.getElementById('address-error');
+            if (address.trim() === "") {
+                addressError.textContent = "Address is required.";
+                isValid = false;
+            } else {
+                addressError.textContent = "";
+            }
+
+            // Validate preferences
+            const preferences = document.getElementById('preferences').value;
+            const preferencesError = document.getElementById('preferences-error');
+            if (preferences.trim() === "") {
+                preferencesError.textContent = "Preferences are required.";
+                isValid = false;
+            } else if (preferences.length > 200) {
+                preferencesError.textContent = "Preferences cannot exceed 200 characters.";
+                isValid = false;
+            } else {
+                preferencesError.textContent = "";
+            }
+
+            // Enable or disable the update button
+            const updateButton = document.getElementById('update-btn');
+            updateButton.disabled = !isValid;
+
+            return isValid;
+        }
+
+        // Handle profile update and reset the form
+        function updateProfile(event) {
+            event.preventDefault();
+
+            if (validateForm()) {
+                const username = document.getElementById('username').value;
+                const lastName = document.getElementById('last-name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const address = document.getElementById('address').value;
+                const preferences = document.getElementById('preferences').value;
+
+                // Display updated profile info
+                const profileInfo = document.getElementById('profile-info');
+                profileInfo.innerHTML = `
+            <h3>Updated Profile</h3>
+            <p><strong>First Name:</strong> ${username}</p>
+            <p><strong>Last Name:</strong> ${lastName}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone Number:</strong> ${phone}</p>
+            <p><strong>Address:</strong> ${address}</p>
+            <p><strong>Preferences:</strong> ${preferences}</p>
+        `;
+                profileInfo.style.display = "block";
+
+                // Show success message
+                alert("Profile updated successfully!");
+
+                // Reset form
+                document.getElementById('profile-form').reset();
+                document.getElementById('update-btn').disabled = true;
+
+                // Clear any error messages
+                document.querySelectorAll('.error-message').forEach(el => el.textContent = "");
+            } else {
+                // Show alert for validation errors
+                alert("Please correct the errors in the form.");
+            }
+        }
+
+        // Add event listener to the update button
+        document.getElementById('update-btn').addEventListener('click', updateProfile);
+
+    </script>
+
+
+
+
+
+
+
+    <!-- profile script -->
+    <script>
+        // Elements
+        const profileView = document.getElementById("profileView");
+        const profileEditForm = document.getElementById("profileEditForm");
+
+        const userName = document.getElementById("userName");
+        const userEmail = document.getElementById("userEmail");
+        const userPhone = document.getElementById("userPhone");
+        const userAddress = document.getElementById("userAddress");
+
+        const editProfileBtn = document.getElementById("editProfileBtn");
+        const saveProfileBtn = document.getElementById("saveProfileBtn");
+        const cancelEditBtn = document.getElementById("cancelEditBtn");
+
+        // Edit button click
+        editProfileBtn.addEventListener("click", function () {
+            // Hide the profile view
+            profileView.style.display = "none";
+
+            // Show the profile edit form
+            profileEditForm.style.display = "block";
+
+            // Pre-fill the edit form with current values
+            document.getElementById("editName").value = userName.textContent;
+            document.getElementById("editEmail").value = userEmail.textContent;
+            document.getElementById("editPhone").value = userPhone.textContent;
+            document.getElementById("editAddress").value = userAddress.textContent;
+        });
+
+        // Save button click (to update profile)
+        saveProfileBtn.addEventListener("click", function () {
+            // Get values from the form
+            const newName = document.getElementById("editName").value;
+            const newEmail = document.getElementById("editEmail").value;
+            const newPhone = document.getElementById("editPhone").value;
+            const newAddress = document.getElementById("editAddress").value;
+
+            // Update profile display
+            userName.textContent = newName;
+            userEmail.textContent = newEmail;
+            userPhone.textContent = newPhone;
+            userAddress.textContent = newAddress;
+
+            // Hide the profile edit form
+            profileEditForm.style.display = "none";
+
+            // Show the updated profile view
+            profileView.style.display = "block";
+        });
+
+        // Cancel button click (to revert changes)
+        cancelEditBtn.addEventListener("click", function () {
+            // Hide the profile edit form
+            profileEditForm.style.display = "none";
+
+            // Show the profile view again
+            profileView.style.display = "block";
+        });
+    </script>
+
+    <!-- Appoitnement script -->
+
+
+    <!-- Register Start -->
+
+    <script>
+        // Select the form
+        const form = document.getElementById('training-form');
+
+        // Add an event listener to the form's submit event
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Get the selected sessions
+            const selectedSessions = [];
+            const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                selectedSessions.push(checkbox.value);
+            });
+
+            // Check if any sessions were selected
+            if (selectedSessions.length > 0) {
+                // Display alert showing the registered sessions
+                alert('You have registered for: ' + selectedSessions.join(', '));
+
+                // After the alert is closed, clear the checkboxes
+                checkboxes.forEach(checkbox => checkbox.checked = false);
+            } else {
+                alert('Please select at least one session to register.');
+            }
+        });
+    </script>
+
+
+    <!-- Register End -->
+
+
+    <!-- session js -->
+    <script>
+        // Function to open the Add Treatment Plan popup
+        function openAddPlanPopup() {
+            const addPlanPopup = document.getElementById('add-plan-popup');
+            addPlanPopup.style.display = 'flex';
+        }
+
+        // Function to close the Add Treatment Plan popup
+        function closeAddPlanPopup() {
+            const addPlanPopup = document.getElementById('add-plan-popup');
+            addPlanPopup.style.display = 'none';
+        }
+
+        // Function to add a new session
+        function addSession() {
+            const category = document.getElementById('new-category').value;
+            const notes = document.getElementById('new-notes').value;
+
+            // Validate the input fields
+            if (!category || !notes) {
+                alert("Please fill in both fields.");
+                return;
+            }
+
+            // Create new session card dynamically
+            const sessionList = document.getElementById('session-list');
+            const sessionCard = document.createElement('div');
+            sessionCard.classList.add('session-card');
+
+            // Generate a unique ID for each session
+            const sessionId = 'session-' + Date.now();
+
+            sessionCard.innerHTML = `
+        <h4>${category}</h4>
+        <p>${notes}</p>
+        <div class="session-actions">
+            <button class="update-btn" onclick="editSession('${sessionId}')">Update</button>
+            <button class="delete-btn" onclick="deleteSession('${sessionId}')">Delete</button>
+        </div>
+    `;
+
+            // Assign the unique ID to the session card
+            sessionCard.setAttribute('data-id', sessionId);
+
+            sessionList.appendChild(sessionCard);
+
+            // Clear the input fields
+            document.getElementById('new-category').value = '';
+            document.getElementById('new-notes').value = '';
+
+            // Close the popup
+            closeAddPlanPopup();
+
+            // Show success popup
+            showPopup("Session Added Successfully!");
+        }
+
+        // Function to show the popup message
+        function showPopup(message) {
+            const popup = document.getElementById('popup');
+            const popupMessage = document.getElementById('popup-message');
+            const popupAction = document.getElementById('popup-action');
+            popupMessage.innerText = message;
+            popupAction.innerText = "OK";
+            popup.style.display = 'flex';
+        }
+
+        // Function to handle the action when OK is clicked in the popup
+        function popupAction() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
+
+        // Function to close the popup
+        function closePopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
+
+        // Function to edit a session
+        function editSession(sessionId) {
+            const sessionCard = document.querySelector(`#session-list .session-card[data-id="${sessionId}"]`);
+            const currentCategory = sessionCard.querySelector('h4').textContent;
+            const currentNotes = sessionCard.querySelector('p').textContent;
+
+            document.getElementById('new-category').value = currentCategory;
+            document.getElementById('new-notes').value = currentNotes;
+
+            // Open the popup for editing
+            openAddPlanPopup();
+
+            // Update the "Add" button to "Save Changes"
+            const addButton = document.querySelector('.popup-content button');
+            addButton.textContent = "Save Changes";
+            addButton.setAttribute('onclick', `saveSessionChanges('${sessionId}')`);
+        }
+
+        // Function to save the changes after editing a session
+        function saveSessionChanges(sessionId) {
+            const updatedCategory = document.getElementById('new-category').value;
+            const updatedNotes = document.getElementById('new-notes').value;
+
+            // Find the session card by its ID
+            const sessionCard = document.querySelector(`#session-list .session-card[data-id="${sessionId}"]`);
+
+            // Update the category and notes
+            sessionCard.querySelector('h4').textContent = updatedCategory;
+            sessionCard.querySelector('p').textContent = updatedNotes;
+
+            // Reset the form and revert the button back to "Add Treatment Plan"
+            document.getElementById('new-category').value = '';
+            document.getElementById('new-notes').value = '';
+            const addButton = document.querySelector('.popup-content button');
+            addButton.textContent = "Add Treatment Plan";
+            addButton.setAttribute('onclick', 'addSession()');
+
+            // Close the popup
+            closeAddPlanPopup();
+
+            // Show success popup
+            showPopup("Session Updated Successfully!");
+        }
+
+        // Function to delete a session
+        function deleteSession(sessionId) {
+            const confirmation = confirm("Are you sure you want to delete this session?");
+            if (confirmation) {
+                const sessionCard = document.querySelector(`#session-list .session-card[data-id="${sessionId}"]`);
+                sessionCard.remove();
+
+                // Show success popup
+                showPopup("Session Deleted Successfully!");
+            }
+        }
+
+    </script>
+
+
+
+
+
+
+
+    <!-- Notification js -->
+
+    <script>
+        function removeNotification(notificationId) {
+            // Get the notification element by its data-id attribute
+            const notification = document.querySelector(`.notification[data-id="${notificationId}"]`);
+
+            // If the notification exists, remove it from the DOM
+            if (notification) {
+                notification.style.transition = 'opacity 0.3s ease-out'; // Optional: fade-out effect
+                notification.style.opacity = 0;
+
+                setTimeout(() => {
+                    notification.remove(); // Removes the notification from the DOM
+                }, 300); // Timeout to allow fade effect to complete
+            }
+        }
+
+    </script>
+
+
+
+
+</body>
+
+</html>
